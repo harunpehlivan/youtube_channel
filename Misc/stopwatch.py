@@ -21,44 +21,42 @@ correct_answer = True
 
 def counter_label(label, q_label): 
     def count(): 
-        if running: 
-            global counter
-            global counter_max
-            global out_of_time
-            global answering
-            global qn
-            global correct_answer
+        if not running: 
+            return
+        global counter
+        global counter_max
+        global out_of_time
+        global answering
+        global qn
+        global correct_answer
 
 
-            tt = datetime.fromtimestamp(counter)
-            string = tt.strftime("%H:%M:%S")
-            display=string 
-    
-            label['text']=display   # Or label.config(text=display) 
-            q_label['text'] = 'Question {}'.format(int(qn+1))
-    
+        tt = datetime.fromtimestamp(counter)
+        string = tt.strftime("%H:%M:%S")
+        display=string 
+
+        label['text']=display   # Or label.config(text=display) 
+        q_label['text'] = 'Question {}'.format(int(qn+1))
+
             # label.after(arg1, arg2) delays by  
             # first argument given in milliseconds 
             # and then calls the function given as second argument. 
             
-            if answering:
-                answering = False
-                if correct_answer:
-                    label['text']='Correct!'
-                else:
-                    label['text']='Incorrect!'
-                label.after(5000, count)
-            
-            elif counter==counter_max:
-                out_of_time = True
-                label['text']='Times up!'
-                Next()
-                out_of_time = False
-                label.after(5000, count)  
-                
-            else:
-                label.after(1000, count)  
-                counter += 1
+        if answering:
+            answering = False
+            label['text'] = 'Correct!' if correct_answer else 'Incorrect!'
+            label.after(5000, count)
+
+        elif counter==counter_max:
+            out_of_time = True
+            label['text']='Times up!'
+            Next()
+            out_of_time = False
+            label.after(5000, count)  
+
+        else:
+            label.after(1000, count)  
+            counter += 1
   
     # Triggering the start of the counter. 
     count()      
@@ -74,19 +72,16 @@ def Start(label, q_label):
     
 # Next function of the stopwatch 
 def Next(): 
-    global counter 
+    global counter
     global out_of_time
     global qn
     global answering
     global correct_answer
     counter=28800
-    
+
     if not out_of_time:
         answering = True
-        if str(e1.get())==answers[qn]:
-            correct_answer = True
-        else:
-            correct_answer = False
+        correct_answer = str(e1.get())==answers[qn]
     qn+=1
     
 def Back():
@@ -96,7 +91,7 @@ def Back():
     counter = 28800
 
 def evaluate(event):
-    print(str(e1.get()))
+    print(e1.get())
 
 root = Tkinter.Tk() 
 root.title("Stopwatch") 
